@@ -2,6 +2,7 @@
 <html lang="{{ metadata.language }}">
 	<head>
 		<meta charset="utf-8">
+		<meta name="color-scheme" content="light dark">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{{ title or metadata.title }}</title>
 		<meta name="description" content="{{ description or metadata.description }}">
@@ -10,8 +11,11 @@
 		<link rel="alternate" href="feed/atom.njk" type="application/atom+xml" title="{{ metadata.title }}">
 		<link rel="alternate" href="feed/json.njk" type="application/json" title="{{ metadata.title }}">
 
+		<link href="/css/index.css" rel="stylesheet">
+		<link href="/css/message-box.css" rel="stylesheet">
+
 		{#- Uncomment this if you’d like folks to know that you used Eleventy to build your site!  #}
-		{#- <meta name="generator" content="{{ eleventy.generator }}"> #}
+		<meta name="generator" content="{{ eleventy.generator }}">
 
 		{#-
 		CSS bundles are provided via the `eleventy-plugin-bundle` plugin:
@@ -22,14 +26,14 @@
 		#}
 
 		{#- Add an arbitrary string to the bundle #}
-		{%- css %}* { box-sizing: border-box; }{% endcss %}
+		{# {%- css %}* { box-sizing: border-box; }{% endcss %} #}
 		{#- Add the contents of a file to the bundle #}
-		{%- css %}{% include "public/css/index.css" %}{% endcss %}
+		{# {%- css %}{% include "public/css/index.css" %}{% endcss %} #}
 		{#- Or add from node_modules #}
 		{# {%- css %}{% include "node_modules/prismjs/themes/prism-okaidia.css" %}{% endcss %} #}
 
 		{#- Render the CSS bundle using Inlined CSS (for the fastest site performance in production) #}
-		<style>{% getBundle "css" %}</style>
+		{# <style>{% getBundle "css" %}</style> #}
 		{#- Renders the CSS bundle using a separate file, if you can't set CSP directive style-src: 'unsafe-inline' #}
 		{#- <link rel="stylesheet" href="{% getBundleFileUrl "css" %}"> #}
 
@@ -50,6 +54,12 @@
 				{%- endfor %}
 				</ul>
 			</nav>
+			<div class="mode-switcher">
+				<h2 class="visually-hidden">Light and dark mode switchers</h2>
+				<button id="lightSwitch" aria-pressed="false" type="button" onclick="switchLight()">Light</button>
+				<button id="darkSwitch" aria-pressed="false" type="button" onclick="switchDark()">Dark</button>
+				<button id="autoSwitch" aria-pressed="true" type="button" onclick="switchAuto()">Auto</button>
+			</div>
 		</header>
 
 		<main id="skip">
@@ -64,5 +74,41 @@
 
 		<!-- This page `{{ page.url | htmlBaseUrl }}` was built on {% currentBuildDate %} -->
 		<script type="module" src="{% getBundleFileUrl "js" %}"></script>
+		<script>
+      const colorScheme = document.querySelector('meta[name="color-scheme"]');
+      const html = document.querySelector('html');
+      const lightSwitch = document.querySelector('#lightSwitch');
+      const darkSwitch = document.querySelector('#darkSwitch');
+      const autoSwitch = document.querySelector('#autoSwitch');
+      const mode = sessionStorage.getItem("mode");
+
+      function switchDark() {
+        colorScheme.setAttribute("content", "dark");
+        sessionStorage.setItem("mode", "dark");
+        lightSwitch.setAttribute("aria-pressed","false");
+        darkSwitch.setAttribute("aria-pressed","true");
+        autoSwitch.setAttribute("aria-pressed","false");
+      }
+      function switchLight() {
+        colorScheme.setAttribute("content", "light");
+        sessionStorage.setItem("mode", "light");
+        lightSwitch.setAttribute("aria-pressed","true");
+        darkSwitch.setAttribute("aria-pressed","false");
+        autoSwitch.setAttribute("aria-pressed","false");
+      }
+      function switchAuto() {
+        colorScheme.setAttribute("content", "light dark");
+        sessionStorage.removeItem("mode");
+        lightSwitch.setAttribute("aria-pressed","false");
+        darkSwitch.setAttribute("aria-pressed","false");
+        autoSwitch.setAttribute("aria-pressed","true");
+      }
+
+      //check for session preferences
+      if (mode) {
+        if (mode === "dark") {switchDark();}
+        else if (mode === "light") {switchLight();}
+      }
+    </script>
 	</body>
 </html>
