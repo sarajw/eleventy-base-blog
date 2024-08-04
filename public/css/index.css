@@ -1,22 +1,19 @@
-/* https://www.a11yproject.com/posts/how-to-hide-content/ */
-.visually-hidden {
-	clip: rect(0 0 0 0);
-	clip-path: inset(50%);
-	height: 1px;
-	overflow: hidden;
+#theme-switching {
 	position: absolute;
-	white-space: nowrap;
-	width: 1px;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 2.0rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.5em;
+	padding-inline: 0.5em;
+	background-color: Canvas;
 }
-/* Posts list */
-.postlist {
-	list-style-type: "";
+
+body {
+	padding-top: 2.0rem !important;
 }
-.postlist-item {
-	counter-increment: start-from -1;
-}
-.postlist-item:before {
-	content: "" counter(start-from, decimal-leading-zero) ". ";
-	text-align: right;
-	margin-left: -1.5rem;
-}
+

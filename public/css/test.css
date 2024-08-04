@@ -1,7 +1,50 @@
-body {
-  background-color: light-dark(lavender, indigo);
-}
-
+/* turn on light/dark/auto mode switcher */
 #mode-switcher {
   display: block !important;
+}
+
+html {
+	color-scheme: light dark;
+  background-color: light-dark(thistle, indigo);
+  font-family:  Avenir, Montserrat, Corbel, 'URW Gothic', source-sans-pro, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header ul {
+  display: flex;
+  gap: 0.75em;
+  list-style-type: "";
+  margin: 0;
+  padding: 0;
+}
+
+
+/* Keep everything below within project for sensible post numbering and visually-hidden elements */
+
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+/* Posts list */
+.postlist {
+	list-style-type: "";
+}
+.postlist-item {
+	counter-increment: start-from -1;
+}
+.postlist-item:before {
+	content: "" counter(start-from, decimal-leading-zero) ". ";
+	text-align: right;
+	margin-left: -1.5rem;
 }

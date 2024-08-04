@@ -40,6 +40,22 @@
 	<body>
 		<a href="#skip" class="visually-hidden">Skip to main content</a>
 
+		<div id="theme-switching">
+			<div class="css-switching">
+				<select name="css-in-use" id="css-switcher">
+					<option value="original">Original</option>
+					<option value="test">Test CSS</option>
+				</select>
+				<a id="css-download-link" href="/css/original.css" download>Download CSS</a>
+			</div>
+			<div id="mode-switcher" style="display: none">
+				<p class="visually-hidden" id="light-and-dark-mode-switchers">Light and dark mode switchers</p>
+				<button id="lightSwitch" aria-pressed="false" type="button" onclick="switchLight()">Light</button>
+				<button id="darkSwitch" aria-pressed="false" type="button" onclick="switchDark()">Dark</button>
+				<button id="autoSwitch" aria-pressed="true" type="button" onclick="switchAuto()">Auto</button>
+			</div>
+		</div>
+
 		<header>
 			<a href="/" class="home-link">{{ metadata.title }}</a>
 
@@ -52,17 +68,6 @@
 				{%- endfor %}
 				</ul>
 			</nav>
-			<select name="css-in-use" id="css-switcher">
-				<option value="original">Original</option>
-				<option value="test">Test CSS</option>
-			</select>
-			<a id="css-download-link" href="/css/original.css" download>Download CSS</a>
-			<div id="mode-switcher" style="display: none">
-				<h2 class="visually-hidden" id="light-and-dark-mode-switchers">Light and dark mode switchers</h2>
-				<button id="lightSwitch" aria-pressed="false" type="button" onclick="switchLight()">Light</button>
-				<button id="darkSwitch" aria-pressed="false" type="button" onclick="switchDark()">Dark</button>
-				<button id="autoSwitch" aria-pressed="true" type="button" onclick="switchAuto()">Auto</button>
-			</div>
 		</header>
 
 		<main id="skip">
@@ -78,47 +83,60 @@
 		<!-- This page `{{ page.url | htmlBaseUrl }}` was built on {% currentBuildDate %} -->
 		<script type="module" src="{% getBundleFileUrl "js" %}"></script>
 		<script>
-      const html = document.querySelector('html');
-      const lightSwitch = document.querySelector('#lightSwitch');
-      const darkSwitch = document.querySelector('#darkSwitch');
-      const autoSwitch = document.querySelector('#autoSwitch');
-      const mode = sessionStorage.getItem("mode");
+			const html = document.querySelector('html');
+			const lightSwitch = document.querySelector('#lightSwitch');
+			const darkSwitch = document.querySelector('#darkSwitch');
+			const autoSwitch = document.querySelector('#autoSwitch');
 			const cssSwitch = document.querySelector("#css-switcher");
 			const cssLink = document.querySelector("#css-download-link");
 			const currentStyleSheet = document.querySelector("#current-style-sheet");
+			const mode = sessionStorage.getItem("mode");
+			const css = sessionStorage.getItem("css");
+
+			function switchCSS(cssName) {
+				currentStyleSheet.setAttribute("href", `/css/${cssName}.css`);
+				cssLink.setAttribute("href", `/css/${cssName}.css`);
+				sessionStorage.setItem("css", cssName);
+			}
 
 			cssSwitch.addEventListener("change", (event) => {
-				currentStyleSheet.setAttribute("href", `/css/${event.target.value}.css`);
-				cssLink.setAttribute("href", `/css/${event.target.value}.css`);
+				switchCSS(event.target.value);
 			})
 
-      function switchDark() {
-        html.style.colorScheme = "dark";
-        sessionStorage.setItem("mode", "dark");
-        lightSwitch.setAttribute("aria-pressed","false");
-        darkSwitch.setAttribute("aria-pressed","true");
-        autoSwitch.setAttribute("aria-pressed","false");
-      }
-      function switchLight() {
-        html.style.colorScheme = "light";
-        sessionStorage.setItem("mode", "light");
-        lightSwitch.setAttribute("aria-pressed","true");
-        darkSwitch.setAttribute("aria-pressed","false");
-        autoSwitch.setAttribute("aria-pressed","false");
-      }
-      function switchAuto() {
-        html.style.colorScheme = "light dark";
-        sessionStorage.removeItem("mode");
-        lightSwitch.setAttribute("aria-pressed","false");
-        darkSwitch.setAttribute("aria-pressed","false");
-        autoSwitch.setAttribute("aria-pressed","true");
-      }
+			function switchDark() {
+				html.style.colorScheme = "dark";
+				sessionStorage.setItem("mode", "dark");
+				lightSwitch.setAttribute("aria-pressed","false");
+				darkSwitch.setAttribute("aria-pressed","true");
+				autoSwitch.setAttribute("aria-pressed","false");
+			}
+			function switchLight() {
+				html.style.colorScheme = "light";
+				sessionStorage.setItem("mode", "light");
+				lightSwitch.setAttribute("aria-pressed","true");
+				darkSwitch.setAttribute("aria-pressed","false");
+				autoSwitch.setAttribute("aria-pressed","false");
+			}
+			function switchAuto() {
+				html.style.colorScheme = "light dark";
+				sessionStorage.removeItem("mode");
+				lightSwitch.setAttribute("aria-pressed","false");
+				darkSwitch.setAttribute("aria-pressed","false");
+				autoSwitch.setAttribute("aria-pressed","true");
+			}
 
-      //check for session preferences
-      if (mode) {
-        if (mode === "dark") {switchDark();}
-        else if (mode === "light") {switchLight();}
-      }
+			//check for session preferences
+			if (mode) {
+				if (mode === "dark") {switchDark();}
+				else if (mode === "light") {switchLight();}
+			}
+			if (css) {
+				switchCSS(css);
+				cssSwitch.value = css;
+			}
+
+			const rootStyles = window.getComputedStyle(html);
+			console.log(rootStyles.getPropertyValue("color-scheme"));
     </script>
 	</body>
 </html>
