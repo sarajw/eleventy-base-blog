@@ -1,0 +1,7 @@
+body {
+  background-color: light-dark(lavender, indigo);
+}
+
+#mode-switcher {
+  display: block !important;
+}
