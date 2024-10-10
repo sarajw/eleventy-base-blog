@@ -70,10 +70,6 @@ VillaPirorum - 11ty-Themes-joy - base blog theme
 
             navigation: auto;
         }
-
-        * {
-            view-transition-name: var(--view-transition-name);
-        }
     }
 
     /* Allow transitions to auto */
