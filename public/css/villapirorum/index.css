@@ -818,6 +818,13 @@ VillaPirorum - 11ty-Themes-joy - base blog theme
 			--scroll-direction: calc(var(--scroll-velocity) / var(--scroll-speed));
 		}
 
+		@property --translate {
+
+				syntax: "<length>";
+				inherits: true;
+				initial-value: 0px;
+		}
+
 		body > header {
 
 			top:   unset;
